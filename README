@@ -30,3 +30,4 @@
     #sudo /usr/sbin/apache2ctl stop
     #sudo cp upload.fcgi /var/www/ 
     #sudo /usr/sbin/apache2ctl start
+6. used grigory.info/MPFDParser as HTTP protocol parser
