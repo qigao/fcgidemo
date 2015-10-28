@@ -1,0 +1,32 @@
+1. install fastcgi
+    #apt-get install libfcgi-dev
+2. update apache config files
+   #cat /etc/apache2/sites-enabled/000-default.conf
+   	DocumentRoot /var/www
+        <Directory /var/www/>
+            Options +ExecCGI
+
+            Order allow,deny
+            Allow from all
+        </Directory>
+   #cat /etc/apache2/mods-enabled/fcgid.conf 
+    <IfModule mod_fcgid.c>
+     FcgidConnectTimeout 20
+     FcgidMaxRequestLen 51200000  #size of uploaded file.
+     <IfModule mod_mime.c>
+       AddHandler fcgid-script .fcgi
+     </IfModule>
+    </IfModule>
+3. updating source file
+    #emacs upload.cpp
+         #28   POSTParser->SetTempDirForFileUpload("/tmp"); #by default uploaded file was stored into /tmp
+4. return value
+    if everything goes well, will return HTTP 200, returned value will be plain text
+     file_name:config.ini
+     temp_file_name:MPFD_Temp_1
+    if something goes wrong, will return HTTP code 500
+5. compile and install
+    #g++  -o upload.fcgi Exception.cpp  Field.cpp Parser.cpp upload.cpp  -I /usr/include/ -I /usr/include/c++/4.8 -L /usr/lib/ -lfcgi 
+    #sudo /usr/sbin/apache2ctl stop
+    #sudo cp upload.fcgi /var/www/ 
+    #sudo /usr/sbin/apache2ctl start
